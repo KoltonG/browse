@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { useLayoutEffect } from "react";
 
 export default function Home() {
   function handleClick() {
