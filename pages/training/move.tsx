@@ -118,7 +118,7 @@ export default function Move() {
               {hoveredBubbles.length + 1}.
             </p>
           ) : (
-            <h1>Great Job!</h1>
+            <h1 className="text-center">Great Job!</h1>
           )}
 
           <Link href="/training">

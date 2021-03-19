@@ -98,5 +98,18 @@ button {
 }
 
 .handsfree-debugger {
-  display: none;
+  --videoSize: 180px;
+  position: fixed;
+  // Keep the correct aspect ratio
+  width: var(--videoSize);
+  height: var(--videoSize);
+  bottom: 50px;
+  left: calc(50% - (var(--videoSize) / 2));
+
+  video {
+    border-radius: 100%;
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+  }
 }
