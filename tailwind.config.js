@@ -35,7 +35,7 @@ module.exports = {
  * */
 function generateSpacing(increment = 8) {
   return {
-    ...[0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].reduce(
+    ...[0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15].reduce(
       (acc, i) => ({
         ...acc,
         // Handles removal of floats. Ref: https://stackoverflow.com/a/8388483

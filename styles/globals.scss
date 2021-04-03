@@ -24,6 +24,17 @@ button {
   @apply py-1;
   font-size: 18px;
   border-radius: 30px;
+
+  &.white {
+    @apply text-white;
+    @apply bg-pink;
+  }
+
+  &.toggle {
+    @apply p-1 flex items-center justify-center;
+    height: 40px;
+    width: 40px;
+  }
 }
 
 @keyframes bubbleHover {
