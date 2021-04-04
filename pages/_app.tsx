@@ -66,8 +66,7 @@ export default function BrowseApp({ Component, pageProps }) {
         ['addDirection', 'Middle', 'DiagonalUpRight', 1],
         ['addDirection', 'Pinky', 'DiagonalUpLeft', 1],
         ['setWeight', 'Thumb', 2]
-      ],
-      enabled: true
+      ]
     })
     // Starting handsfree
     // TODO: We can programmatically start and potentially stop this
@@ -76,6 +75,7 @@ export default function BrowseApp({ Component, pageProps }) {
     // Create events for tracking
     // From an event
     document.addEventListener('handsfree-data', (event) => {
+      // @ts-ignore
       const data = event.detail
       if (!data.hands) return
 
@@ -84,7 +84,11 @@ export default function BrowseApp({ Component, pageProps }) {
       let y = data.hands?.pointer?.[0]?.y
       if (data.hands?.gesture?.[0]?.name === 'leftClick') {
         console.log(`Left 🖐 - Left 🖱  at x: ${x} y: ${y}`)
-        document.elementFromPoint(x, y).click()
+        const buttonElement: HTMLElement = document.elementFromPoint(
+          x,
+          y
+        ) as HTMLElement
+        buttonElement.click()
       }
       if (data.hands?.gesture?.[0]?.name === 'rightClick') {
         console.log(`Left 🖐 - Right 🖱  at x: ${x} y: ${y}`)
@@ -97,7 +101,11 @@ export default function BrowseApp({ Component, pageProps }) {
       y = data.hands?.pointer?.[1]?.y
       if (data.hands?.gesture?.[1]?.name === 'leftClick') {
         console.log(`Right 🖐 - Left 🖱 at x: ${x} y: ${y}`)
-        document.elementFromPoint(x, y).click()
+        const buttonElement: HTMLElement = document.elementFromPoint(
+          x,
+          y
+        ) as HTMLElement
+        buttonElement.click()
       }
       if (data.hands?.gesture?.[1]?.name === 'rightClick') {
         console.log(`Right 🖐 - Right 🖱 at x: ${x} y: ${y}`)
