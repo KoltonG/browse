@@ -15,7 +15,7 @@ export default function BrowseApp({ Component, pageProps }) {
       // TODO: Instantiate with the face model as well.
       // weboji: true,
     })
-    // Create the click gesture
+    // Create the click gestures
     window.handsfree.useGesture({
       name: 'leftClick',
       algorithm: 'fingerpose',
@@ -70,6 +70,7 @@ export default function BrowseApp({ Component, pageProps }) {
       enabled: true
     })
     // Starting handsfree
+    // TODO: We can programmatically start and potentially stop this
     window.handsfree.start()
 
     // Create events for tracking
@@ -87,6 +88,8 @@ export default function BrowseApp({ Component, pageProps }) {
       }
       if (data.hands?.gesture?.[0]?.name === 'rightClick') {
         console.log(`Left 🖐 - Right 🖱  at x: ${x} y: ${y}`)
+        const element = document.elementFromPoint(x, y)
+        element.dispatchEvent(new CustomEvent('contextmenu'))
       }
 
       // Track right hand
@@ -98,11 +101,11 @@ export default function BrowseApp({ Component, pageProps }) {
       }
       if (data.hands?.gesture?.[1]?.name === 'rightClick') {
         console.log(`Right 🖐 - Right 🖱 at x: ${x} y: ${y}`)
+        const element = document.elementFromPoint(x, y)
+        element.dispatchEvent(new CustomEvent('contextmenu'))
       }
     })
   }, [])
 
   return <Component {...pageProps} />
 }
-
-// document.elementFromPoint(x, y).click();

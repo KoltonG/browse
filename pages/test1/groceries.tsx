@@ -1,5 +1,4 @@
-import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // Grocery items
 const items: ItemProps[] = [
@@ -25,7 +24,7 @@ const items: ItemProps[] = [
   },
   {
     imageUrl: '/apple.png',
-    name: 'apple'
+    name: 'Apple'
   },
   {
     imageUrl: '/onion.png',
@@ -44,15 +43,23 @@ const items: ItemProps[] = [
 export default function Groceries() {
   const [quantities, setQuantity] = useState(items)
 
+  // On mount, start handsfree
   useEffect(() => {
-    document.addEventListener('contextmenu', (event) => event.preventDefault())
+    setTimeout(() => window.handsfree?.plugin.palmPointers.enable(), 2000)
+  }, [])
+
+  useEffect(() => {
+    // Disables right click functionality
+    document.addEventListener('contextmenu', disableRightClick)
     return () => {
-      // TODO: Remove e
-      document.removeEventListener('contextmenu', (event) =>
-        event.preventDefault()
-      )
+      // Remove event listener on unmount
+      document.removeEventListener('contextmenu', disableRightClick)
     }
   }, [])
+
+  function disableRightClick(event: MouseEvent) {
+    event.preventDefault()
+  }
 
   return (
     <div
@@ -82,11 +89,16 @@ export default function Groceries() {
           <div className="grid grid-cols-2 gap-x-6 gap-y-4">
             {items.map(({ imageUrl, name }, i) => (
               <Item
+                key={name}
                 imageUrl={imageUrl}
                 name={name}
                 quantity={quantities[i].quantity ?? 0}
                 onChange={(quantity: number) => {
                   setQuantity((prevQuantities) => {
+                    // Ignore negative quantities
+                    if (quantity < 0) return prevQuantities
+
+                    // Update quantity
                     prevQuantities[i].quantity = quantity
                     return [...prevQuantities]
                   })
@@ -131,7 +143,33 @@ type ItemProps = {
   onChange?: (quantity: number) => void
 }
 
+/** Controller component representing an grocery item */
 function Item({ imageUrl, name, quantity = 0, onChange }: ItemProps) {
+  const buttonRef = useRef(null) // Holds reference to the - button
+  // Share component quantity with event listeners due to having no access to
+  // internal component state after creation
+  const quantityRef = useRef<number>(quantity)
+
+  // Keep quantity and quantityRef in sync
+  useEffect(() => {
+    quantityRef.current = quantity
+  }, [quantity])
+
+  useEffect(() => {
+    if (buttonRef.current) {
+      // https://stackoverflow.com/questions/17859051/can-i-handle-a-right-click-event-on-an-html-button-element
+      buttonRef.current.addEventListener('contextmenu', onRightClick)
+    }
+    return () => {
+      buttonRef.current.removeEventListener('contextmenu', onRightClick)
+    }
+  }, [])
+
+  function onRightClick(event: MouseEvent) {
+    // Reduce the quantity
+    onChange(quantityRef.current - 1)
+  }
+
   return (
     <div className="flex flex-col items-center gap-1">
       <img src={imageUrl} alt={name} className="w-full object-cover" />
@@ -139,7 +177,7 @@ function Item({ imageUrl, name, quantity = 0, onChange }: ItemProps) {
       <div className="flex items-center gap-2">
         {/* TODO: Update to be onRightClick */}
         {/*  https://stackoverflow.com/questions/17859051/can-i-handle-a-right-click-event-on-an-html-button-element */}
-        <button className="white toggle" onClick={() => onChange(quantity - 1)}>
+        <button className="white toggle" ref={buttonRef}>
           -
         </button>
         <div className="border-pink border px-2 py-1 rounded w-6 text-center">
