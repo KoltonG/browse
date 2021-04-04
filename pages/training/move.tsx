@@ -19,6 +19,7 @@ export default function Move() {
   useEffect(() => {
     setTimeout(() => {
       window.handsfree?.plugin.palmPointers.enable()
+      // @ts-ignore
       document.addEventListener('handsfree-data', ({ detail: data }) => {
         if (!data) return
         const x = data.hands?.pointer?.[0]?.x || data.hands?.pointer?.[1]?.x
@@ -118,7 +119,7 @@ export default function Move() {
               {hoveredBubbles.length + 1}.
             </p>
           ) : (
-            <h1>Great Job!</h1>
+            <h1 className="text-center">Great Job!</h1>
           )}
 
           <Link href="/training">

@@ -39,7 +39,7 @@ namespace HandsfreeModule {
     // Between 0 and 10
     confidence: string
     // A JSON object which describes the gesture.
-    description: [string, string, string, number][]
+    description: [string, string, string | number, number?][]
   }
 
   export class Handsfree {
